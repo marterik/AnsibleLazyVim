@@ -1,0 +1,60 @@
+---
+- name: Install Git on server1
+  hosts: server1
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Ensure Python dnf module is available
+      package:
+        name: python3-dnf
+        state: present
+      when: ansible_os_family == "RedHat"
+    
+    - name: Install git package using dnf
+      dnf:
+        name: git
+        state: present
+        install_weak_deps: yes
+    
+    - name: Verify git installation
+      command: git --version
+      register: git_version
+      changed_when: false
+    
+    - name: Display git version
+      debug:
+        msg: "Git version installed: {{ git_version.stdout }}"
+
+
+
+- name: Install Neovim on server1
+  hosts: server1
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install nvim package using dnf
+      dnf:
+        name: neovim
+        state: present
+        install_weak_deps: yes
+    
+    - name: Verify nvim installation
+      command: nvim --version
+      register: nvim_version
+      changed_when: false
+    
+    - name: Display nvim version
+      debug:
+        msg: "nvim version installed: {{ nvim_version.stdout }}"
+
+
+- name: Install Cascadia Nerd Font on server1
+  hosts: server1
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Install font package using dnf
+      dnf:
+        name: cascadia-mono-nf-fonts
+        state: present
+        install_weak_deps: yes
