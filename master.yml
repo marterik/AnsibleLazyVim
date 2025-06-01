@@ -1,0 +1,10 @@
+---
+
+- name: "Update system"
+  import_playbook: playbooks/update.yml
+
+- name: "Install prerequisites"
+  import_playbook: playbooks/pre.yml
+
+- name: "Install LazyVim"
+  import_playbook: playbooks/lazy.yml
