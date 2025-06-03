@@ -69,3 +69,45 @@
     - name: Display fd-find version
       debug:
         msg: "fdfind version installed: {{ fdfind_version.stdout }}"
+
+- name: Add COPR repository and install lazygit
+  hosts: server1
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Ensure dnf-plugins-core is installed
+      dnf:
+        name: dnf-plugins-core
+        state: present
+    
+    - name: Add COPR repository using dnf copr command
+      command: dnf copr enable {{ copr_user }}/{{ copr_project }} -y
+      args:
+        creates: "/etc/yum.repos.d/_copr:copr.fedorainfracloud.org:{{ copr_user }}:{{ copr_project }}.repo"
+      vars:
+        copr_user: "atim"
+        copr_project: "lazygit"
+    
+    - name: Verify repository was added
+      command: dnf repolist --enabled
+      register: repo_list
+      changed_when: false
+    
+    - name: Show enabled repositories
+      debug:
+        msg: "{{ repo_list.stdout_lines }}"
+    
+    - name: Install package from COPR repository
+      dnf:
+        name: lazygit
+        state: present
+      when: "'copr:copr.fedorainfracloud.org:atim:lazygit' in repo_list.stdout"
+
+    - name: Verify lazygit installation
+      command: lazygit --version
+      register: lazygit_version
+      changed_when: false
+    
+    - name: Display lazygit version
+      debug:
+        msg: "lazygit version installed: {{ lazygit_version.stdout }}"
