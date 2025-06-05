@@ -8,7 +8,7 @@
       git:
         clone: true
         repo: 'https://github.com/LazyVim/starter'
-        dest: /home/erik/.config/nvim
+        dest: "{{ nvim_config_dest }}"
 
 - name: Install Fuzy Find "fzf" on server1
   hosts: server1

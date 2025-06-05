@@ -6,3 +6,4 @@ webservers:
     ansible_user: auser
     ansible_ssh_pass: apassword
     ansible_become_pass: "{{ ansible_ssh_pass }}"
+    nvim_config_dest: /home/erik/.config/nvim
